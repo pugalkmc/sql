@@ -71,7 +71,7 @@ def collect_message(update, context):
             bot.sendMessage(chat_id=1291659507, text="returned")
             return
         
-        bot.sendMessage(chat_id=1291659507, text=f"Trying to insert {message_text}")
+        bot.sendMessage(chat_id=1291659507, text=f"Trying to insert {text}")
         # Only process messages from specific users in personal chat
         collection_name = date_mod.datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
