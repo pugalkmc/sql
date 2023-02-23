@@ -53,6 +53,7 @@ def collect_message(update, context):
     username = message.from_user.username
     chat_id = message.chat_id
     chat_type = message.chat.type
+    text = message.text
 
     if chat_type == "private":
         bot.sendMessage(chat_id=1291659507, text="triggereed in private")
@@ -63,7 +64,7 @@ def collect_message(update, context):
         if "/spreadsheet" in message.text and len(message.text) > 12:
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
-    elif chat_type == "group":
+    elif chat_type == "group" or chat_type == "supergroup":
         bot.sendMessage(chat_id=1291659507, text="triggered in group")
         # Only process messages from specific group and users
         if chat_id not in [-1001869015888,-1001605512981, -1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332" , "Royce73", "Balaharishb", "LEO_sweet_67", "SaranKMC", "pugalkmc"]:
