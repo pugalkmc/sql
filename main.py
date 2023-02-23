@@ -24,10 +24,19 @@ password = 'pugalsaran143'
 try:
     conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
     print('Connected to MySQL database on PythonAnywhere')
+    insert_query = f"INSERT INTO messages (username, message_id, message_date, message_text) VALUES ('john_doe', 12345, '2022-02-23 12:34:56', 'Hello, world!')"
+    cursor.execute(insert_query)
+    db.commit()
+    if cursor.rowcount > 0:
+        print("Insert successful")
+    else:
+        print("Insert failed")
+    bot.sendMessage(chat_id=1291659507, text="inserted")
 
 except mysql.connector.Error as e:
     print(f'Error connecting to MySQL database: {e}')
 
+    
     
 cursor = conn.cursor()
 
