@@ -24,14 +24,16 @@ database = 'pugalkmc$poolsea'
 user = 'pugalkmc'
 password = 'pugalsaran143'
 
-# Connect to the database
-try:
-    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
-    cursor = conn.cursor()
-    print('Connected to MySQL database on PythonAnywhere')
-
-except mysql.connector.Error as e:
-    print(f'Error connecting to MySQL database: {e}')
+conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
+cursor = conn.cursor()
+# # Connect to the database
+# try:
+#     conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
+#     cursor = conn.cursor()
+#     print('Connected to MySQL database on PythonAnywhere')
+#
+# except mysql.connector.Error as e:
+#     print(f'Error connecting to MySQL database: {e}')
 
 
 # Set up the Telegram bot
@@ -74,7 +76,7 @@ def collect_message(update, context):
         message_id = message.message_id
         message_date = message.date
         message_text = message.text
-        insert_query = f"INSERT INTO messages (username, message_id, message_date, message_text) VALUES ('{username}', '{message_id}', '{message_date}', '{message_text}')"
+        insert_query = f"INSERT INTO {collection_name} (username, message_id, message_text, message_date) VALUES ('{username}', '{message_id}', '{message_text}', '{message_date}')"
         cursor.execute(insert_query)
         conn.commit()
         if cursor.rowcount > 0:
@@ -89,7 +91,7 @@ def save_to_spreadsheet(update=None, context=None, date=None):
     # Get all the messages from the database
     select_query = f"SELECT * FROM messages WHERE message_date >= '{collection_name}' AND message_date < '{collection_name} 23:59:59'"
     cursor.execute(select_query)
-    messages = [{'username': row[0], 'message_id': row[1], 'message_date': row[2], 'message_text': row[3]} for row in
+    messages = [{'username': row[0], 'message_id': row[1], 'message_text': row[2], 'message_date': row[3]} for row in
                 cursor.fetchall()]
 
     # Create a new Excel workbook and worksheet
@@ -102,30 +104,40 @@ def save_to_spreadsheet(update=None, context=None, date=None):
     ws.column_dimensions['C'].width = 25
     ws.column_dimensions['D'].width = 100
     ws['A1'] = 'Username'
-    ws['B1'] = 'Message ID'
-    ws['C1'] = 'Message Date'
-    ws['D1'] = 'Message Text'
+    ws['B1'] = 'Message Link'
+    ws['C1'] = 'Message Text'
+    ws['D1'] = 'Message Date'
 
     # Write the data to the worksheet
     for i, message in enumerate(messages, start=2):
         ws.cell(row=i, column=1, value=message['username'])
         ws.cell(row=i, column=2, value=message['message_id'])
-        ws.cell(row=i, column=3, value=message['message_date'])
-        ws.cell(row=i, column=4, value=message['message_text'])
+        ws.cell(row=i, column=3, value=message['message_text'])
+        ws.cell(row=i, column=4, value=message['message_date'])
 
     # Save the workbook
     wb.save('chat_history.xlsx')
     bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
 
 
-def run_bot():
-    updater = Updater(token=token, use_context=True)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("spreadsheet", save_to_spreadsheet))
-    dp.add_handler(MessageHandler(Filters.text, collect_message))
-    updater.start_polling()
+updater = Updater(token=token, use_context=True)
+dp = updater.dispatcher
+dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler("spreadsheet", save_to_spreadsheet))
+dp.add_handler(MessageHandler(Filters.text, collect_message))
+updater.start_polling()
 
-
-if __name__ == "__main__":
-    run_bot()
+while True:
+    time = date_mod.datetime.now().strftime("%H-%M")
+    date = date_mod.datetime.now().strftime('%Y-%m-%d')
+    select_query = f"SELECT * FROM daily WHERE {date} == '2013-12-12'"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+    print(result)
+    
+    # for row in result:
+    #     if ()
+    if str(time) == "20-59":
+        insert_query = f"INSERT INTO daily (date, is_updated) VALUES ('{date}','yes')"
+        cursor.execute(insert_query)
+        conn.commit()
