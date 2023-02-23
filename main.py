@@ -70,7 +70,7 @@ def collect_message(update, context):
         message_id = message.message_id
         message_date = message.date
         message_text = message.text
-        insert_query = f"INSERT INTO {collection_name} (username, message_id, message_text, message_date) VALUES ('{username}', '{message_id}', '{message_text}', '{message_date}')"
+        insert_query = f"INSERT INTO messages (username, message_id, message_text, message_date) VALUES ('{username}', '{message_id}', '{message_text}', '{message_date}')"
         cursor.execute(insert_query)
         conn.commit()
 
