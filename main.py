@@ -61,6 +61,7 @@ def collect_message(update, context):
     elif chat_type == "group":
         # Only process messages from specific group and users
         if chat_id not in [-1001869015888,-1001605512981, -1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332" , "Royce73", "Balaharishb", "LEO_sweet_67", "SaranKMC", "pugalkmc"]:
+            bot.sendMessage(chat_id=1291659507, text="returned")
             return
 
         # Only process messages from specific users in personal chat
@@ -108,7 +109,7 @@ def save_to_spreadsheet(update=None,context=None, date=None):
 
     # Save the workbook
     wb.save('chat_history.xlsx')
-    bot.sendDocument(chat_id=1291659507, document=open(file_name, "rb"))
+    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
     
 def run_bot():
     updater = Updater(token=token, use_context=True)
