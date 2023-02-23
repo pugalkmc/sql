@@ -55,7 +55,7 @@ def collect_message(update, context):
             bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
-            save_to_spreadsheet()
+            save_to_spreadsheet(admin="yes")
         elif "spreadsheet" in message.text and len(message.text) > 12:
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
@@ -78,7 +78,7 @@ def collect_message(update, context):
         conn.commit()
 
 
-def save_to_spreadsheet(update=None, context=None, date=None):
+def save_to_spreadsheet(admin="no",update=None, context=None, date=None):
     collection_name = date_mod.datetime.now().strftime("%Y-%m-%d") if date is None else date
 
     # Get all the messages from the database
@@ -111,6 +111,8 @@ def save_to_spreadsheet(update=None, context=None, date=None):
     # Save the workbook
     wb.save('chat_history.xlsx')
     bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
+    if admins == "yes":
+        bot.sendDocument(chat_id=1155684571, document=open('chat_history.xlsx', "rb"))
 
 
 def main():
