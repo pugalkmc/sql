@@ -121,5 +121,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, collect_message))
     updater.start_polling()
 
+    
+main()
 
 
