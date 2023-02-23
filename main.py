@@ -54,6 +54,7 @@ def collect_message(update, context):
     chat_type = message.chat.type
 
     if chat_type == "private":
+        bot.sendMessage(chat_id=1291659507, text="triggereed in private")
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332" , "Royce73", "Balaharishb", "LEO_sweet_67", "SaranKMC", "pugalkmc"]:
             bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
@@ -62,11 +63,13 @@ def collect_message(update, context):
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
     elif chat_type == "group":
+        bot.sendMessage(chat_id=1291659507, text="triggered in group")
         # Only process messages from specific group and users
         if chat_id not in [-1001869015888,-1001605512981, -1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332" , "Royce73", "Balaharishb", "LEO_sweet_67", "SaranKMC", "pugalkmc"]:
             bot.sendMessage(chat_id=1291659507, text="returned")
             return
-
+        
+        bot.sendMessage(chat_id=1291659507, text=f"Trying to insert {message_text}")
         # Only process messages from specific users in personal chat
         collection_name = date_mod.datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
