@@ -14,21 +14,20 @@ import mysql.connector
 
 # Set up the MySQL connection
 
-mydb = mysql.connector.connect(
-  host="sql12.freemysqlhosting.net",
-  user="sql12600481",
-  password="Xyf1WEv2E7",
-  database="sql12600481",
-  port=3306
-)
+# Replace the placeholders with your own credentials
+host = 'pugalkmc.mysql.pythonanywhere-services.com'
+database = 'pugalkmc$poolsea'
+user = 'pugalkmc'
+password = 'pugalsaran143'
 
-cursor = db.cursor()
+# Connect to the database
+try:
+    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
+    print('Connected to MySQL database on PythonAnywhere')
 
-# Test the connection
-if mydb.is_connected():
-    print("Connected to MySQL database")
-else:
-    print("Failed to connect to MySQL database")
+except mysql.connector.Error as e:
+    print(f'Error connecting to MySQL database: {e}')
+
 
 
 
