@@ -12,6 +12,7 @@ from telegram.ext import *
 import datetime as date_mod
 import mysql.connector
 
+token = "5123712096:AAF9i762sqwDi76OvHPqD8YWNHjMGIWFiko"
 # Set up the MySQL connection
 
 bot = Bot(token=token)
@@ -38,15 +39,6 @@ try:
 
 except mysql.connector.Error as e:
     print(f'Error connecting to MySQL database: {e}')
-
-    
-    
-cursor = conn.cursor()
-
-
-
-
-token = "5123712096:AAF9i762sqwDi76OvHPqD8YWNHjMGIWFiko"
 
 # Set up the Telegram bot
 
