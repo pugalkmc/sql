@@ -14,6 +14,8 @@ import mysql.connector
 
 # Set up the MySQL connection
 
+bot = Bot(token=token)
+
 # Replace the placeholders with your own credentials
 host = 'pugalkmc.mysql.pythonanywhere-services.com'
 database = 'pugalkmc$poolsea'
@@ -45,8 +47,8 @@ cursor = conn.cursor()
 
 
 token = "5123712096:AAF9i762sqwDi76OvHPqD8YWNHjMGIWFiko"
+
 # Set up the Telegram bot
-bot = Bot(token=token)
 
 
 def start(update, context):
