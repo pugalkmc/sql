@@ -45,21 +45,20 @@ except mysql.connector.Error as e:
 
 def start(update, context):
     update.message.reply_text("Hi! I'm your Telegram bot. I'll collect messages and links from this group.")
-
+    
 
 def collect_message(update, context):
-    message = update.message.text
-    username = update.message.from_user.username
-    chat_id = update.message.chat_id
-    chat_type = update.message.chat.type
-    text = message
+    message = update.message
+    username = message.from_user.username
+    chat_id = message.chat_id
+    chat_type = message.chat.type
 
     if chat_type == "private":
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332" , "Royce73", "Balaharishb", "LEO_sweet_67", "SaranKMC", "pugalkmc"]:
             bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
 
-        if "/spreadsheet" in text and len(text) > 12:
+        if "/spreadsheet" in message.text and len(message.text) > 12:
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
     elif chat_type == "group":
@@ -80,6 +79,7 @@ def collect_message(update, context):
             print("Insert successful")
         else:
             print("Insert failed")
+
 
 
 def save_to_spreadsheet(update=None,context=None, date=None):
