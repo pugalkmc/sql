@@ -79,7 +79,7 @@ def collect_message(update, context):
         message_text = message.text
         insert_query = f"INSERT INTO messages (username, message_id, message_date, message_text) VALUES ('{username}', '{message_id}', '{message_date}', '{message_text}')"
         cursor.execute(insert_query)
-        db.commit()
+        conn.commit()
         if cursor.rowcount > 0:
             print("Insert successful")
         else:
