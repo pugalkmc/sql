@@ -22,7 +22,7 @@ password = 'pugalsaran143'
 
 # Connect to the database
 try:
-    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)cursor = conn.cursor()
+    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
     cursor = conn.cursor()
     print('Connected to MySQL database on PythonAnywhere')
     insert_query = f"INSERT INTO messages (username, message_id, message_date, message_text) VALUES ('john_doe', 12345, '2022-02-23 12:34:56', 'Hello, world!')"
