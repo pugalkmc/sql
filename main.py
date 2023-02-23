@@ -42,7 +42,6 @@ def start(update, context):
 
 
 def collect_message(update, context):
-    bot.sendMessage(chat_id=1291659507, text=f"{update}")
     message = update.message
     username = message.from_user.username
     chat_id = message.chat_id
@@ -60,9 +59,7 @@ def collect_message(update, context):
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
     elif chat_type == "group" or chat_type == "supergroup":
-        if chat_id not in [-1001869015888, -1001605512981, -1001588000922] or username not in ["Jellys04",
-                                                                                               "Cryptomaker143",
-                                                                                               "Shankar332", "Royce73",
+        if chat_id not in [-1001588000922] or username not in ["Jellys04","Cryptomaker143" "Shankar332", "Royce73",
                                                                                                "Balaharishb",
                                                                                                "LEO_sweet_67",
                                                                                                "SaranKMC", "pugalkmc"]:
@@ -111,7 +108,7 @@ def save_to_spreadsheet(admin="no",update=None, context=None, date=None):
     # Save the workbook
     wb.save('chat_history.xlsx')
     bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
-    if admins == "yes":
+    if admin == "yes":
         bot.sendDocument(chat_id=1155684571, document=open('chat_history.xlsx', "rb"))
 
 
