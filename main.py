@@ -130,7 +130,7 @@ updater.start_polling()
 while True:
     time = date_mod.datetime.now().strftime("%H-%M")
     date = date_mod.datetime.now().strftime('%Y-%m-%d')
-    if str(time) == "21-28":
+    if str(time) == "21-29":
         select_query = f"SELECT * FROM daily WHERE {date} = '2013-12-12'"
         cursor.execute(select_query)
         result = cursor.fetchall()
