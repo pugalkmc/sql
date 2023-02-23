@@ -13,14 +13,24 @@ import datetime as date_mod
 import mysql.connector
 
 # Set up the MySQL connection
-mysql_config = {
-    'user': 'sql12600481',
-    'password': 'Xyf1WEv2E7',
-    'host': 'sql12.freemysqlhosting.net',
-    'database': 'sql12600481'
-}
-db = mysql.connector.connect(**mysql_config)
+
+mydb = mysql.connector.connect(
+  host="sql12.freemysqlhosting.net",
+  user="sql12600481",
+  password="Xyf1WEv2E7",
+  database="sql12600481",
+  port=3306
+)
+
 cursor = db.cursor()
+
+# Test the connection
+if mydb.is_connected():
+    print("Connected to MySQL database")
+else:
+    print("Failed to connect to MySQL database")
+
+
 
 token = "5123712096:AAF9i762sqwDi76OvHPqD8YWNHjMGIWFiko"
 # Set up the Telegram bot
