@@ -48,6 +48,7 @@ def start(update, context):
     
 
 def collect_message(update, context):
+    bot.sendMessage(chat_id=1291659507, text=f"{update}")
     message = update.message
     username = message.from_user.username
     chat_id = message.chat_id
