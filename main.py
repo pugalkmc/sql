@@ -12,7 +12,7 @@ from telegram.ext import *
 import datetime as date_mod
 import mysql.connector
 
-token = "5123712096:AAF9i762sqwDi76OvHPqD8YWNHjMGIWFiko"
+token = "6208523031:AAH0jWiZr8FOEZ_1xyarUg0-liaMUcDn3uw"
 # Set up the MySQL connection
 
 bot = Bot(token=token)
