@@ -28,6 +28,9 @@ try:
 except mysql.connector.Error as e:
     print(f'Error connecting to MySQL database: {e}')
 
+    
+cursor = conn.cursor()
+
 
 
 
