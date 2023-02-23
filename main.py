@@ -130,14 +130,16 @@ updater.start_polling()
 while True:
     time = date_mod.datetime.now().strftime("%H-%M")
     date = date_mod.datetime.now().strftime('%Y-%m-%d')
-    select_query = f"SELECT * FROM daily WHERE {date} = '2013-12-12'"
-    cursor.execute(select_query)
-    result = cursor.fetchall()
-    print(result)
-    
-    # for row in result:
-    #     if ()
     if str(time) == "20-59":
+        select_query = f"SELECT * FROM daily WHERE {date} = '2013-12-12'"
+        cursor.execute(select_query)
+        result = cursor.fetchall()
+        print(result)
         insert_query = f"INSERT INTO daily (date, is_updated) VALUES ('{date}','yes')"
         cursor.execute(insert_query)
         conn.commit()
+
+    # for row in result:
+    #     if ()
+
+
