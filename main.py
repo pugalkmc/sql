@@ -18,6 +18,22 @@ token = "6208523031:AAH0jWiZr8FOEZ_1xyarUg0-liaMUcDn3uw"
 
 bot = Bot(token=token)
 
+# Replace the placeholders with your own credentials
+host = 'pugalkmc.mysql.pythonanywhere-services.com'
+database = 'pugalkmc$poolsea'
+user = 'pugalkmc'
+password = 'pugalsaran143'
+
+# Connect to the database
+try:
+    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
+    cursor = conn.cursor()
+    print('Connected to MySQL database on PythonAnywhere')
+
+except mysql.connector.Error as e:
+    print(f'Error connecting to MySQL database: {e}')
+
+
 
 # define the DROP TABLE query
 drop_table_query = "DROP TABLE IF EXISTS messages"
@@ -42,21 +58,6 @@ cursor.execute(create_table_query)
 
 # commit the changes to the database
 conn.commit()
-
-# Replace the placeholders with your own credentials
-host = 'pugalkmc.mysql.pythonanywhere-services.com'
-database = 'pugalkmc$poolsea'
-user = 'pugalkmc'
-password = 'pugalsaran143'
-
-# Connect to the database
-try:
-    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
-    cursor = conn.cursor()
-    print('Connected to MySQL database on PythonAnywhere')
-
-except mysql.connector.Error as e:
-    print(f'Error connecting to MySQL database: {e}')
 
 
 # Set up the Telegram bot
