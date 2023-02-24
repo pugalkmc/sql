@@ -91,13 +91,6 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
         else:
             user_counts[message['username']] = {'count': 1, 'total': 0}
 
-    # Calculate the total number of messages for the day
-    total_messages = sum([user_counts[username]['count'] for username in user_counts])
-
-    # Update the total message count for each user
-    for username in user_counts:
-        user_counts[username]['total'] = total_messages
-
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
     ws = wb.active
@@ -105,17 +98,15 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Write the headers and user message counts
     ws.column_dimensions['A'].width = 13
     ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 25
-    ws.column_dimensions['D'].width = 100
+    ws.column_dimensions['C'].width = 40
+    ws.column_dimensions['D'].width = 20
     ws['A1'] = 'Username'
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'Message Date'
-    ws['E1'] = """=QUERY(ARRAYFORMULA(LOWER(B:B)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 LABEL COUNT(Col1) 'Count'",1)"""
-    for i, (username, counts) in enumerate(user_counts.items(), start=2):
-        ws.cell(row=i, column=1, value=username)
-       # ws.cell(row=i, column=5, value=counts['count'])
-        # ws.cell(row=i, column=6, value=counts['total'])
+    formula_cell = ws.cell(row=1, column=6)
+    formula_cell.value = f"""=QUERY(ARRAYFORMULA(LOWER(B:B)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 
+    LABEL COUNT(Col1) 'Count'",1)"""
 
     # Write the data to the worksheet
     for i, message in enumerate(messages, start=len(user_counts) + 2):
