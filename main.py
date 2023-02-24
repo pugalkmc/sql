@@ -104,9 +104,6 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'Message Date'
-    formula_cell = ws.cell(row=1, column=5)
-    formula_cell.value = f"""=QUERY(ARRAYFORMULA(LOWER(A2:A)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 
-    LABEL COUNT(Col1) 'Count'",1)"""
 
     # Write the data to the worksheet
     for i, message in enumerate(messages, start=len(user_counts) + 2):
