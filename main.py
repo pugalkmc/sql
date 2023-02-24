@@ -96,7 +96,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws = wb.active
 
     # Write the headers and user message counts
-    ws.column_dimensions['A'].width = 13
+    ws.column_dimensions['A'].width = 18
     ws.column_dimensions['B'].width = 30
     ws.column_dimensions['C'].width = 40
     ws.column_dimensions['D'].width = 20
@@ -104,8 +104,8 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'Message Date'
-    formula_cell = ws.cell(row=1, column=6)
-    formula_cell.value = f"""=QUERY(ARRAYFORMULA(LOWER(B:B)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 
+    formula_cell = ws.cell(row=1, column=5)
+    formula_cell.value = f"""=QUERY(ARRAYFORMULA(LOWER(A2:A)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 
     LABEL COUNT(Col1) 'Count'",1)"""
 
     # Write the data to the worksheet
@@ -121,7 +121,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Save the workbook
     wb.save('chat_history.xlsx')
 
-    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
+    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
     if admin == "yes":
         bot.sendDocument(chat_id=1155684571, document=open('chat_history.xlsx', "rb"))
 
