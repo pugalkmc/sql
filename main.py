@@ -111,12 +111,11 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'Message Date'
-    ws['E1'] = 'Count'
-    ws['F1'] = 'Total'
+    ws['E1'] = '=QUERY(ARRAYFORMULA(LOWER(B:B)),"SELECT Col1, COUNT(Col1) WHERE Col1 <> '' GROUP BY Col1 LABEL COUNT(Col1) 'Count'",1)'
     for i, (username, counts) in enumerate(user_counts.items(), start=2):
         ws.cell(row=i, column=1, value=username)
-        ws.cell(row=i, column=5, value=counts['count'])
-        ws.cell(row=i, column=6, value=counts['total'])
+       # ws.cell(row=i, column=5, value=counts['count'])
+        # ws.cell(row=i, column=6, value=counts['total'])
 
     # Write the data to the worksheet
     for i, message in enumerate(messages, start=len(user_counts) + 2):
