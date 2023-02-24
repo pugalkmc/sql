@@ -59,10 +59,10 @@ def collect_message(update, context):
             save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
 
     elif chat_type == "group" or chat_type == "supergroup":
-        if chat_id not in [-1001588000922] or username not in ["Jellys04","Cryptomaker143", "Shankar332", "Royce73",
-                                                                                               "Balaharishb",
-                                                                                               "LEO_sweet_67",
-                                                                                               "SaranKMC", "pugalkmc"]:
+        if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
+                                                               "Balaharishb",
+                                                               "LEO_sweet_67",
+                                                               "SaranKMC", "pugalkmc"]:
             return
 
         # Only process messages from specific users in personal chat
@@ -75,22 +75,28 @@ def collect_message(update, context):
         conn.commit()
 
 
-
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
 
     # Get all the messages from the database for a specific date
     select_query = f"SELECT username, message_id, message_text, message_date FROM messages WHERE DATE(message_date) = '{collection_name}'"
     cursor.execute(select_query)
-    messages = [{'username': row[0], 'message_id': row[1], 'message_text': row[2], 'message_date': row[3]} for row in cursor.fetchall()]
+    messages = [{'username': row[0], 'message_id': row[1], 'message_text': row[2], 'message_date': row[3]} for row in
+                cursor.fetchall()]
 
-    # Count the number of messages from each user
     user_counts = {}
     for message in messages:
         if message['username'] in user_counts:
-            user_counts[message['username']] += 1
+            user_counts[message['username']]['count'] += 1
         else:
-            user_counts[message['username']] = 1
+            user_counts[message['username']] = {'count': 1, 'total': 0}
+
+    # Calculate the total number of messages for the day
+    total_messages = sum([user_counts[username]['count'] for username in user_counts])
+
+    # Update the total message count for each user
+    for username in user_counts:
+        user_counts[username]['total'] = total_messages
 
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
@@ -105,10 +111,12 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'Message Date'
-    ws['E1'] = 'Message Count'
-    for i, (username, count) in enumerate(user_counts.items(), start=2):
+    ws['E1'] = 'Count'
+    ws['F1'] = 'Total'
+    for i, (username, counts) in enumerate(user_counts.items(), start=2):
         ws.cell(row=i, column=1, value=username)
-        ws.cell(row=i, column=5, value=count)
+        ws.cell(row=i, column=5, value=counts['count'])
+        ws.cell(row=i, column=6, value=counts['total'])
 
     # Write the data to the worksheet
     for i, message in enumerate(messages, start=len(user_counts) + 2):
@@ -122,6 +130,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
 
     # Save the workbook
     wb.save('chat_history.xlsx')
+
     bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', "rb"))
     if admin == "yes":
         bot.sendDocument(chat_id=1155684571, document=open('chat_history.xlsx', "rb"))
@@ -135,7 +144,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, collect_message))
     updater.start_polling()
 
-    
+
 main()
 
 
