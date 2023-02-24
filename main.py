@@ -77,7 +77,7 @@ def collect_message(update, context):
 
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
-    collection_name = datetime.now().strftime("%Y-%m-%d") if date is None else date
+    collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
 
     # Get all the messages from the database for a specific date
     select_query = f"SELECT username, message_id, message_text, message_date FROM messages WHERE DATE(message_date) = '{collection_name}'"
