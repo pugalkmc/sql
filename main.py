@@ -18,6 +18,31 @@ token = "6208523031:AAH0jWiZr8FOEZ_1xyarUg0-liaMUcDn3uw"
 
 bot = Bot(token=token)
 
+
+# define the DROP TABLE query
+drop_table_query = "DROP TABLE IF EXISTS messages"
+
+# execute the query
+cursor.execute(drop_table_query)
+
+# commit the changes to the database
+conn.commit()
+
+create_table_query = """
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    message_id VARCHAR(50) NOT NULL,
+    message_text VARCHAR(200) NOT NULL,
+    message_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+"""
+
+cursor.execute(create_table_query)
+
+# commit the changes to the database
+conn.commit()
+
 # Replace the placeholders with your own credentials
 host = 'pugalkmc.mysql.pythonanywhere-services.com'
 database = 'pugalkmc$poolsea'
