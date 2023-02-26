@@ -86,38 +86,6 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws.column_dimensions['A'].width = 18
     ws.column_dimensions['B'].width = 30
     ws.column_dimensions['C'].width = 40
-    ws.column_dimensions['D'].user_counts = {}
-    for message_id, message_data in messages.items():
-        username = message_data.get('username')
-        if username in user_counts:
-            user_counts[username]['count'] += 1
-        else:
-            user_counts[username] = {'count': 1, 'total': 0}
-
-    # Create a new Excel workbook and worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-
-    # Write the headers and user message counts
-    ws.column_dimensions['A'].width = 18
-    ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 40
-    ws.column_dimensions['D'].user_counts = {}
-    for message_id, message_data in messages.items():
-        username = message_data.get('username')
-        if username in user_counts:
-            user_counts[username]['count'] += 1
-        else:
-            user_counts[username] = {'count': 1, 'total': 0}
-
-    # Create a new Excel workbook and worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-
-    # Write the headers and user message counts
-    ws.column_dimensions['A'].width = 18
-    ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 40
     ws.column_dimensions['D'].width = 18
     ws['A1'] = 'Username'
     ws['B1'] = 'Message Count'
