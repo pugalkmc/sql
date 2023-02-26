@@ -122,10 +122,11 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
         row += 1
 
     # Save the Excel workbook
-    wb.save(f'{collection_name}.xlsx')
-    bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
+    file_name = f'{collection_name}.xlsx'
+    wb.save(file_name)
+    bot.sendDocument(chat_id=1291659507, document=open(file_name, 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open(file_name, "rb"))
 
 
         
