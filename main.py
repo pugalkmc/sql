@@ -83,14 +83,14 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws.column_dimensions['B'].width = 40
     ws.column_dimensions['C'].width = 40
     ws.column_dimensions['D'].width = 18
-    ws.column_dimensions['E'].width = 20
     ws.column_dimensions['F'].width = 20
+    ws.column_dimensions['G'].width = 20
     ws['A1'] = 'Username'
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'IST Time'
-    ws['E1'] = 'Count'
-    ws['F1'] = 'Unique Usernames'
+    ws['F1'] = 'Username'
+    ws['G1'] = 'Message COunt'
 
     # Write the data
     row = 2
@@ -118,7 +118,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Write the unique usernames and their message counts to column E
     row = 2
     for username, counts in username_counts.items():
-        ws.cell(row=row, column=5).value = counts['count']
+        ws.cell(row=row, column=6).value = counts['count']
         row += 1
 
     # Save the Excel workbook
