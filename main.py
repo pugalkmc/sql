@@ -83,14 +83,14 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws.column_dimensions['B'].width = 40
     ws.column_dimensions['C'].width = 40
     ws.column_dimensions['D'].width = 18
+    ws.column_dimensions['E'].width = 20
     ws.column_dimensions['F'].width = 20
-    ws.column_dimensions['G'].width = 20
     ws['A1'] = 'Username'
     ws['B1'] = 'Message Link'
     ws['C1'] = 'Message Text'
     ws['D1'] = 'IST Time'
-    ws['F1'] = 'Usernames'
-    ws['G1'] = 'MEssage Count'
+    ws['E1'] = 'Count'
+    ws['F1'] = 'Unique Usernames'
 
     # Write the data
     row = 2
@@ -111,20 +111,22 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
             ws.cell(row=row, column=2).value = link
             ws.cell(row=row, column=3).value = text
             ws.cell(row=row, column=4).value = time
+            ws.cell(row=row, column=5).value = 1
+            ws.cell(row=row, column=6).value = username
             row += 1
     
-    # Write the unique usernames and their message counts to column F and E respectively
+    # Write the unique usernames and their message counts to column E
     row = 2
     for username, counts in username_counts.items():
         ws.cell(row=row, column=5).value = counts['count']
-        ws.cell(row=row, column=6).value = username
         row += 1
 
     # Save the Excel workbook
     wb.save('user_message_counts.xlsx')
-    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
+    bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open('chat_history.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
+
 
 
 
