@@ -57,7 +57,7 @@ def collect_message(update, context):
         # Only process messages from specific users in personal chat
         collection_name = datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
-        message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")  # Convert datetime to IST timezone
+        message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%H:%M:%S")  # Convert datetime to IST timezone
         message_text = message.text
 
         # Store message data in Firebase Realtime Database
@@ -71,7 +71,8 @@ def collect_message(update, context):
 
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
-    collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
+    # collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
+    collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
     # Get all the messages from the database for a specific date
     messages = db.reference(f'messages/{collection_name}').get() or {}
