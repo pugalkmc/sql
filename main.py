@@ -118,14 +118,14 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws["F1"] = "Usernames"
     ws["G1"] = "Count"
     
-    ws['H2'] = 'Jellys04'
-    ws['H3'] = 'Cryptomaker143'
-    ws['H4'] = 'Shankar332'
-    ws['H5'] = "Royce73"
-    ws['H6'] = "Balaharishb"
-    ws['H7'] = "LEO_sweet_67"
-    ws['H8'] = "SaranKMC"
-    ws['H9'] = "pugalkmc"
+    ws['F2'] = 'Jellys04'
+    ws['F3'] = 'Cryptomaker143'
+    ws['F4'] = 'Shankar332'
+    ws['F5'] = "Royce73"
+    ws['F6'] = "Balaharishb"
+    ws['F7'] = "LEO_sweet_67"
+    ws['F8'] = "SaranKMC"
+    ws['F9'] = "pugalkmc"
     
     # set the formula in cell G2
     cell = ws['G2']
