@@ -72,15 +72,15 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Get all the messages from the database for a specific date
     messages = db.reference(f'messages/{collection_name}').get() or {}
 
+    # Count the number of messages for each user
     user_counts = {}
     for message_id, message_data in messages.items():
         username = message_data.get('username')
-        text = message_data.get('text')
-        if username in user_counts:
-            user_counts[username]['count'] += 1
-            user_counts[username]['total'] += len(text)
-        else:
-            user_counts[username] = {'count': 1, 'total': len(text)}
+        if username:
+            if username in user_counts:
+                user_counts[username] += 1
+            else:
+                user_counts[username] = 1
 
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
@@ -89,19 +89,18 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Write the headers and user message counts
     ws.column_dimensions['A'].width = 18
     ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 40
-    ws.column_dimensions['D'].width = 18
     ws['A1'] = 'Username'
     ws['B1'] = 'Message Count'
-    ws['C1'] = 'Total Characters'
     row = 2
-    for username, counts in user_counts.items():
+    for username, count in user_counts.items():
         ws.cell(row=row, column=1).value = username
-        ws.cell(row=row, column=2).value = counts['count']
-        ws.cell(row=row, column=3).value = counts['total']
+        ws.cell(row=row, column=2).value = count
         row += 1
+
     # Save the Excel workbook
     wb.save('user_message_counts.xlsx')
+
+    # Send the Excel workbook to the designated chat IDs
     bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
     if admin == "yes":
         bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
