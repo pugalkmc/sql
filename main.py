@@ -23,7 +23,7 @@ bot = Bot(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk")
 
 
 def start(update, context):
-    update.message.reply_text("Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
+    bot.sendMessage(chat_id=chat_id, text="Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
 
 
 def collect_message(update, context):
@@ -36,7 +36,7 @@ def collect_message(update, context):
     if chat_type == "private":
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73", "Balaharishb", "LEO_sweet_67",
                             "SaranKMC", "pugalkmc"]:
-            update.message.reply_text("You have no permission to use this bot")
+            bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes")
@@ -130,9 +130,9 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
         row += 1
     # Save the Excel workbook
     wb.save('user_message_counts.xlsx')
-    update.message.reply_document(open('chat_history.xlsx', 'rb'))
+    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
     if admin == "yes":
-        update.message.reply_document(open('chat_history.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open('chat_history.xlsx', "rb"))
         
 def main():
     updater = Updater(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk", use_context=True)
