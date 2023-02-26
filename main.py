@@ -41,9 +41,9 @@ def collect_message(update, context):
             bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
-            save_to_spreadsheet(admin="yes")
+            save_to_spreadsheet(admin="yes", update=update, context=context)
         elif "spreadsheet" in message.text and len(message.text) > 12:
-            save_to_spreadsheet(datetime.now().strftime("%Y-%m-%d"))
+            save_to_spreadsheet(datetime.now().strftime("%Y-%m-%d"), update=update, context=context)
 
     elif chat_type == "group" or chat_type == "supergroup":
         if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
@@ -55,15 +55,18 @@ def collect_message(update, context):
         # Only process messages from specific users in personal chat
         collection_name = datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
-        message_date = message.date.strftime("%Y-%m-%d %H:%M:%S")  # Convert datetime to string
+        message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")  # Convert datetime to IST timezone
         message_text = message.text
+        message_link = f"https://t.me/c/{str(chat_id)[4:]}/{message_id}"
 
         # Store message data in Firebase Realtime Database
         db.reference(f'messages/{collection_name}/{message_id}').set({
             'username': username,
             'message_text': message_text,
-            'message_date': message_date
+            'message_date_ist': message_date_ist,
+            'message_link': message_link
         })
+
 
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
@@ -72,38 +75,57 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Get all the messages from the database for a specific date
     messages = db.reference(f'messages/{collection_name}').get() or {}
 
-    # Count the number of messages for each user
-    user_counts = {}
-    for message_id, message_data in messages.items():
-        username = message_data.get('username')
-        if username:
-            if username in user_counts:
-                user_counts[username] += 1
-            else:
-                user_counts[username] = 1
-
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
     ws = wb.active
 
-    # Write the headers and user message counts
+    # Write the headers
     ws.column_dimensions['A'].width = 18
-    ws.column_dimensions['B'].width = 30
+    ws.column_dimensions['B'].width = 40
+    ws.column_dimensions['C'].width = 40
+    ws.column_dimensions['D'].width = 18
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 20
     ws['A1'] = 'Username'
-    ws['B1'] = 'Message Count'
+    ws['B1'] = 'Message Link'
+    ws['C1'] = 'Message Text'
+    ws['D1'] = 'IST Time'
+    ws['E1'] = 'Count'
+    ws['F1'] = 'Unique Usernames'
+
+    # Write the data
     row = 2
-    for username, count in user_counts.items():
-        ws.cell(row=row, column=1).value = username
-        ws.cell(row=row, column=2).value = count
+    username_counts = {}
+    for message_id, message_data in messages.items():
+        username = message_data.get('username')
+        text = message_data.get('text')
+        time = message_data.get('time')
+        link = f'https://t.me/c/1432340562/{message_id}'
+        
+        if username:
+            if username in username_counts:
+                username_counts[username]['count'] += 1
+            else:
+                username_counts[username] = {'count': 1, 'total': 0}
+
+            ws.cell(row=row, column=1).value = username
+            ws.cell(row=row, column=2).value = link
+            ws.cell(row=row, column=3).value = text
+            ws.cell(row=row, column=4).value = time
+            row += 1
+    
+    # Write the unique usernames and their message counts to column F and E respectively
+    row = 2
+    for username, counts in username_counts.items():
+        ws.cell(row=row, column=5).value = counts['count']
+        ws.cell(row=row, column=6).value = username
         row += 1
 
     # Save the Excel workbook
     wb.save('user_message_counts.xlsx')
-
-    # Send the Excel workbook to the designated chat IDs
-    bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
+    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open('chat_history.xlsx', "rb"))
 
         
 def main():
