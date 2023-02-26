@@ -11,7 +11,7 @@ from firebase_admin import credentials, db
 from openpyxl.styles import Alignment
 from telegram import *
 from telegram.ext import *
-from openpyxl.formula import Tokenizer, Token
+from openpyxl.formula import Tokenizer
 from openpyxl.utils.cell import get_column_letter
 
 cred = credentials.Certificate("kit-pro-f4b0d-firebase-adminsdk-mhzrf-8a07acab1c.json")
