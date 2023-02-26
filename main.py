@@ -120,6 +120,29 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     for username, counts in username_counts.items():
         ws.cell(row=row, column=7).value = counts['count']
         row += 1
+    ws["H1"] = "Usernames"
+    ws["I1"] = "Count"
+    
+    ws['H2'] = 'Jellys04'
+    ws['H3'] = 'Cryptomaker143'
+    ws['H4'] = 'Shankar332'
+    ws['H5'] = "Royce73"
+    ws['H6'] = "Balaharishb"
+    ws['H7'] = "LEO_sweet_67"
+    ws['H8'] = "SaranKMC"
+    ws['H9'] = "pugalkmc"
+    
+    # set the formula in cell G2
+    cell = ws['G2']
+    cell.value = ''
+    tokenizer = Tokenizer(cell.value)
+    for token in tokenizer.items:
+        if token.value == 'A2:A':
+            token.value += '700'
+    cell.value = '=ArrayFormula(IF(H2:H="",,COUNTIF(A2:A700,H2:H)))'
+    
+    
+    
 
     # Save the Excel workbook
     file_name = f"{collection_name}.xlsx"
