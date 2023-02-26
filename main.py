@@ -81,8 +81,8 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws = wb.active
 
     # Write the headers
-    ws.column_dimensions['A'].width = 18
-    ws.column_dimensions['B'].width = 40
+    ws.column_dimensions['A'].width = 14
+    ws.column_dimensions['B'].width = 30
     ws.column_dimensions['C'].width = 40
     ws.column_dimensions['D'].width = 18
     ws.column_dimensions['F'].width = 20
@@ -113,17 +113,10 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
             ws.cell(row=row, column=2).value = link
             ws.cell(row=row, column=3).value = text
             ws.cell(row=row, column=4).value = time
-            ws.cell(row=row, column=5).value = 1
-            ws.cell(row=row, column=6).value = username
             row += 1
     
-    # Write the unique usernames and their message counts to column E
-    row = 2
-    for username, counts in username_counts.items():
-        ws.cell(row=row, column=7).value = counts['count']
-        row += 1
-    ws["H1"] = "Usernames"
-    ws["I1"] = "Count"
+    ws["F1"] = "Usernames"
+    ws["G1"] = "Count"
     
     ws['H2'] = 'Jellys04'
     ws['H3'] = 'Cryptomaker143'
@@ -141,7 +134,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     for token in tokenizer.items:
         if token.value == 'A2:A':
             token.value += '700'
-    cell.value = '=ArrayFormula(IF(H2:H="",,COUNTIF(A2:A700,H2:H)))'
+    cell.value = '=ArrayFormula(IF(F2:F="",,COUNTIF(A2:A700,F2:F)))'
     
     
     
