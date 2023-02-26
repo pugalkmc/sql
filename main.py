@@ -134,7 +134,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     for token in tokenizer.items:
         if token.value == 'A2:A':
             token.value += '700'
-    cell.value = '=ARRAY_CONSTRAIN(ARRAYFORMULA(ArrayFormula(IF(F2:F9="9",,COUNTIF(A2:A700,F2:F9)))),9,1))'
+    cell.value = '=ARRAY_CONSTRAIN(ARRAYFORMULA(ArrayFormula(IF(F2:F9="9",,COUNTIF(A2:A700,F2:F9)))),9,1)'
     
     
     
