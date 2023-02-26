@@ -12,7 +12,7 @@ from openpyxl.styles import Alignment
 from telegram import *
 from telegram.ext import *
 
-cred = credentials.Certificate("/path/to/serviceAccountKey.json")
+cred = credentials.Certificate("kit-pro-f4b0d-firebase-adminsdk-mhzrf-8a07acab1c.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://kit-pro-f4b0d-default-rtdb.firebaseio.com/"
 })
