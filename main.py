@@ -23,6 +23,7 @@ bot = Bot(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk")
 
 
 def start(update, context):
+    chat_id = message.chat_id
     bot.sendMessage(chat_id=chat_id, text="Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
 
 
@@ -36,7 +37,7 @@ def collect_message(update, context):
     if chat_type == "private":
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73", "Balaharishb", "LEO_sweet_67",
                             "SaranKMC", "pugalkmc"]:
-            bot.sendMessage(chat_id=update.message.chat_id, text="You have no permission to use this bot")
+            bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes")
