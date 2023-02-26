@@ -19,7 +19,7 @@ firebase_admin.initialize_app(cred, {
 
 # Set up the Telegram bot
 
-bot = Bot(token="YOUR_BOT_TOKEN_HERE")
+bot = Bot(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk")
 
 
 def start(update, context):
