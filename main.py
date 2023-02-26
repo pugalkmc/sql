@@ -8,7 +8,6 @@ import openpyxl
 import pytz
 from openpyxl.styles import Alignment
 from telegram import *
-from telegram.bot import Bot
 from telegram.ext import *
 import datetime as date_mod
 import mysql.connector
@@ -77,7 +76,7 @@ def collect_message(update, context):
     if chat_type == "private":
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73", "Balaharishb", "LEO_sweet_67",
                             "SaranKMC", "pugalkmc"]:
-            bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
+            update.message.reply_text("You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes")
@@ -144,9 +143,9 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Save the workbook
     wb.save('chat_history.xlsx')
 
-    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
+    update.message.reply_document(open('chat_history.xlsx', 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=1155684571, document=open('chat_history.xlsx', "rb"))
+        update.message.reply_document(open('chat_history.xlsx', "rb"))
 
 
 def main():
