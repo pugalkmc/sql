@@ -75,10 +75,12 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     user_counts = {}
     for message_id, message_data in messages.items():
         username = message_data.get('username')
+        text = message_data.get('text')
         if username in user_counts:
             user_counts[username]['count'] += 1
+            user_counts[username]['total'] += len(text)
         else:
-            user_counts[username] = {'count': 1, 'total': 0}
+            user_counts[username] = {'count': 1, 'total': len(text)}
 
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
@@ -100,9 +102,10 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
         row += 1
     # Save the Excel workbook
     wb.save('user_message_counts.xlsx')
-    bot.sendDocument(chat_id=1291659507, document=open('chat_history.xlsx', 'rb'))
+    bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open('chat_history.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
+
         
 def main():
     updater = Updater(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk", use_context=True)
