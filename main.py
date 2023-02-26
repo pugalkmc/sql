@@ -57,14 +57,13 @@ def collect_message(update, context):
         message_id = message.message_id
         message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")  # Convert datetime to IST timezone
         message_text = message.text
-        message_link = f"https://t.me/c/{str(chat_id)[4:]}/{message_id}"
 
         # Store message data in Firebase Realtime Database
         db.reference(f'messages/{collection_name}/{message_id}').set({
             'username': username,
-            'message_text': message_text,
-            'message_date_ist': message_date_ist,
-            'message_link': message_link
+            'text': message_text,
+            'time': message_date_ist,
+            'message_id': message_id
         })
 
 
@@ -100,7 +99,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
         username = message_data.get('username')
         text = message_data.get('text')
         time = message_data.get('time')
-        link = f'https://t.me/c/1432340562/{message_id}'
+        link = f'https://t.me/poolsea/{message_id}'
         
         if username:
             if username in username_counts:
