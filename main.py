@@ -90,7 +90,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws['C1'] = 'Message Text'
     ws['D1'] = 'IST Time'
     ws['F1'] = 'Username'
-    ws['G1'] = 'Message COunt'
+    ws['G1'] = 'Message Count'
 
     # Write the data
     row = 2
@@ -118,14 +118,15 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Write the unique usernames and their message counts to column E
     row = 2
     for username, counts in username_counts.items():
-        ws.cell(row=row, column=6).value = counts['count']
+        ws.cell(row=row, column=7).value = counts['count']
         row += 1
 
     # Save the Excel workbook
+    file_name = f"{collection_name}.xlsx"
     wb.save('user_message_counts.xlsx')
-    bot.sendDocument(chat_id=1291659507, document=open('user_message_counts.xlsx', 'rb'))
+    bot.sendDocument(chat_id=1291659507, document=open(file_name, 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open('user_message_counts.xlsx', "rb"))
+        bot.sendDocument(chat_id=814546021, document=open(file_name, "rb"))
 
 
 
