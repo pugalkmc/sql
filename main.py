@@ -36,7 +36,7 @@ def collect_message(update, context):
     if chat_type == "private":
         if username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73", "Balaharishb", "LEO_sweet_67",
                             "SaranKMC", "pugalkmc"]:
-            bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
+            bot.sendMessage(chat_id=update.message.chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes")
