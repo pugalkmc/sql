@@ -1,65 +1,25 @@
-import logging
 import os
 import re
 import time
 from datetime import datetime, timedelta
+from typing import List
 
 import openpyxl
 import pytz
+import firebase_admin
+from firebase_admin import credentials, db
 from openpyxl.styles import Alignment
 from telegram import *
 from telegram.ext import *
-import datetime as date_mod
-import mysql.connector
 
-token = "6208523031:AAH0jWiZr8FOEZ_1xyarUg0-liaMUcDn3uw"
-# Set up the MySQL connection
-
-bot = Bot(token=token)
-
-# Replace the placeholders with your own credentials
-host = 'pugalkmc.mysql.pythonanywhere-services.com'
-database = 'pugalkmc$poolsea'
-user = 'pugalkmc'
-password = 'pugalsaran143'
-
-# Connect to the database
-try:
-    conn = mysql.connector.connect(host=host, database=database, user=user, password=password)
-    cursor = conn.cursor()
-    print('Connected to MySQL database on PythonAnywhere')
-
-except mysql.connector.Error as e:
-    print(f'Error connecting to MySQL database: {e}')
-
-
-
-# define the DROP TABLE query
-drop_table_query = "DROP TABLE IF EXISTS messages"
-
-# execute the query
-cursor.execute(drop_table_query)
-
-# commit the changes to the database
-conn.commit()
-
-create_table_query = """
-CREATE TABLE messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    message_id VARCHAR(50) NOT NULL,
-    message_text VARCHAR(200) NOT NULL,
-    message_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-"""
-
-cursor.execute(create_table_query)
-
-# commit the changes to the database
-conn.commit()
-
+cred = credentials.Certificate("/path/to/serviceAccountKey.json")
+firebase_admin.initialize_app(cred, {
+    "databaseURL": "https://kit-pro-f4b0d-default-rtdb.firebaseio.com/"
+})
 
 # Set up the Telegram bot
+
+bot = Bot(token="YOUR_BOT_TOKEN_HERE")
 
 
 def start(update, context):
@@ -81,7 +41,7 @@ def collect_message(update, context):
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes")
         elif "spreadsheet" in message.text and len(message.text) > 12:
-            save_to_spreadsheet(date_mod.datetime.now().strftime("%Y-%m-%d"))
+            save_to_spreadsheet(datetime.now().strftime("%Y-%m-%d"))
 
     elif chat_type == "group" or chat_type == "supergroup":
         if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
@@ -91,30 +51,32 @@ def collect_message(update, context):
             return
 
         # Only process messages from specific users in personal chat
-        collection_name = date_mod.datetime.now().strftime("%Y-%m-%d")
+        collection_name = datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
         message_date = message.date.strftime("%Y-%m-%d %H:%M:%S")  # Convert datetime to string
         message_text = message.text
-        insert_query = f"INSERT INTO messages (username, message_id, message_text, message_date) VALUES ('{username}', '{message_id}', '{message_text}', '{message_date}')"
-        cursor.execute(insert_query)
-        conn.commit()
+
+        # Store message data in Firebase Realtime Database
+        db.reference(f'messages/{collection_name}/{message_id}').set({
+            'username': username,
+            'message_text': message_text,
+            'message_date': message_date
+        })
 
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
 
     # Get all the messages from the database for a specific date
-    select_query = f"SELECT username, message_id, message_text, message_date FROM messages WHERE DATE(message_date) = '{collection_name}'"
-    cursor.execute(select_query)
-    messages = [{'username': row[0], 'message_id': row[1], 'message_text': row[2], 'message_date': row[3]} for row in
-                cursor.fetchall()]
+    messages = db.reference(f'messages/{collection_name}').get() or {}
 
     user_counts = {}
-    for message in messages:
-        if message['username'] in user_counts:
-            user_counts[message['username']]['count'] += 1
+    for message_id, message_data in messages.items():
+        username = message_data.get('username')
+        if username in user_counts:
+            user_counts[username]['count'] += 1
         else:
-            user_counts[message['username']] = {'count': 1, 'total': 0}
+            user_counts[username] = {'count': 1, 'total': 0}
 
     # Create a new Excel workbook and worksheet
     wb = openpyxl.Workbook()
@@ -124,30 +86,54 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     ws.column_dimensions['A'].width = 18
     ws.column_dimensions['B'].width = 30
     ws.column_dimensions['C'].width = 40
-    ws.column_dimensions['D'].width = 20
+    ws.column_dimensions['D'].user_counts = {}
+    for message_id, message_data in messages.items():
+        username = message_data.get('username')
+        if username in user_counts:
+            user_counts[username]['count'] += 1
+        else:
+            user_counts[username] = {'count': 1, 'total': 0}
+
+    # Create a new Excel workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Write the headers and user message counts
+    ws.column_dimensions['A'].width = 18
+    ws.column_dimensions['B'].width = 30
+    ws.column_dimensions['C'].width = 40
+    ws.column_dimensions['D'].user_counts = {}
+    for message_id, message_data in messages.items():
+        username = message_data.get('username')
+        if username in user_counts:
+            user_counts[username]['count'] += 1
+        else:
+            user_counts[username] = {'count': 1, 'total': 0}
+
+    # Create a new Excel workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Write the headers and user message counts
+    ws.column_dimensions['A'].width = 18
+    ws.column_dimensions['B'].width = 30
+    ws.column_dimensions['C'].width = 40
+    ws.column_dimensions['D'].width = 18
     ws['A1'] = 'Username'
-    ws['B1'] = 'Message Link'
-    ws['C1'] = 'Message Text'
-    ws['D1'] = 'Message Date'
-
-    # Write the data to the worksheet
-    for i, message in enumerate(messages, start=len(user_counts) + 2):
-        ws.cell(row=i, column=1, value=message['username'])
-        ws.cell(row=i, column=2, value=f"https://t.me/poolsea/{message['message_id']}")
-        ws.cell(row=i, column=3, value=message['message_text'])
-        ws.cell(row=i, column=4, value=message['message_date'])
-
-    # Freeze the top row of the sheet
-    ws.freeze_panes = ws['A2']
-
-    # Save the workbook
-    wb.save('chat_history.xlsx')
-
+    ws['B1'] = 'Message Count'
+    ws['C1'] = 'Total Characters'
+    row = 2
+    for username, counts in user_counts.items():
+        ws.cell(row=row, column=1).value = username
+        ws.cell(row=row, column=2).value = counts['count']
+        ws.cell(row=row, column=3).value = counts['total']
+        row += 1
+    # Save the Excel workbook
+    wb.save('user_message_counts.xlsx')
     update.message.reply_document(open('chat_history.xlsx', 'rb'))
     if admin == "yes":
         update.message.reply_document(open('chat_history.xlsx', "rb"))
-
-
+        
 def main():
     updater = Updater(token=token, use_context=True)
     dp = updater.dispatcher
@@ -158,5 +144,3 @@ def main():
 
 
 main()
-
-
