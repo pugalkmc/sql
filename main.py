@@ -23,6 +23,7 @@ bot = Bot(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk")
 
 
 def start(update, context):
+    message = update.message
     chat_id = message.chat_id
     bot.sendMessage(chat_id=chat_id, text="Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
 
