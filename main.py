@@ -131,7 +131,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # set the formula in cell G2
     for row in range(2, 10):
         username = ws.cell(row=row, column=6).value  # Get the username from Column F
-        count = '=COUNTIF(B:B,"*' + username + '*")'  # Construct the formula
+        count = '=COUNTIF(A:A,"*' + username + '*")'  # Construct the formula
         ws.cell(row=row, column=7).value = count
     
     
