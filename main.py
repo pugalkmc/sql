@@ -45,7 +45,8 @@ def collect_message(update, context):
         if "spreadsheet admin" == text:
             save_to_spreadsheet(admin="yes", update=update, context=context)
         elif "spreadsheet" in message.text and len(message.text) > 12:
-            save_to_spreadsheet(datetime.now().strftime("%Y-%m-%d"), update=update, context=context)
+            text = text.replace("spreadsheet ","")
+            save_to_spreadsheet(text, update=update, context=context)
 
     elif chat_type == "group" or chat_type == "supergroup":
         if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
@@ -71,8 +72,8 @@ def collect_message(update, context):
 
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
-    # collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
-    collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
+    collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
+    # collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
     # Get all the messages from the database for a specific date
     messages = db.reference(f'messages/{collection_name}').get() or {}
@@ -139,7 +140,7 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     # Save the Excel workbook
     file_name = f"{collection_name}.xlsx"
     wb.save(file_name)
-    bot.sendDocument(chat_id=1291659507, document=open(file_name, 'rb'))
+    bot.sendDocument(chat_id=update.message.chat_id, document=open(file_name, 'rb'))
     if admin == "yes":
         bot.sendDocument(chat_id=814546021, document=open(file_name, "rb"))
 
