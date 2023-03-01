@@ -46,7 +46,7 @@ def collect_message(update, context):
             save_to_spreadsheet(admin="yes", update=update, context=context)
         elif "spreadsheet" in message.text and len(message.text) > 12:
             text = text.replace("spreadsheet ","")
-            save_to_spreadsheet(text, update=update, context=context)
+            save_to_spreadsheet(date=text, update=update, context=context)
 
     elif chat_type == "group" or chat_type == "supergroup":
         if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
