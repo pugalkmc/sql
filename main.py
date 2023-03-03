@@ -43,10 +43,10 @@ def collect_message(update, context):
             bot.sendMessage(chat_id=chat_id, text="You have no permission to use this bot")
             return
         if "spreadsheet admin" == text:
-            save_to_spreadsheet(admin="yes", update=update, context=context)
+            save_to_spreadsheet(update, context, admin="yes")
         elif "spreadsheet" in message.text and len(message.text) > 12:
             text = text.replace("spreadsheet ","")
-            save_to_spreadsheet(date=text, update=update, context=context)
+            save_to_spreadsheet(update=update, context=context,date=text)
 
 
     elif chat_type == "group" or chat_type == "supergroup":
@@ -73,7 +73,7 @@ def collect_message(update, context):
 
 admins_list = [1155684571,814546021,1291659507]
 
-def save_to_spreadsheet(admin=None, update, context, date=None):
+def save_to_spreadsheet(update, context,admin=None date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
     # collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
