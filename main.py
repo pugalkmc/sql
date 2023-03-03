@@ -48,6 +48,7 @@ def collect_message(update, context):
             text = text.replace("spreadsheet ","")
             save_to_spreadsheet(date=text, update=update, context=context)
 
+
     elif chat_type == "group" or chat_type == "supergroup":
         if chat_id not in [-1001588000922] or username not in ["Jellys04", "Cryptomaker143", "Shankar332", "Royce73",
                                                                "Balaharishb",
@@ -72,7 +73,7 @@ def collect_message(update, context):
 
 admins_list = [1155684571,814546021,1291659507]
 
-def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
+def save_to_spreadsheet(admin=None, update, context, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
     # collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
