@@ -73,7 +73,7 @@ def collect_message(update, context):
 
 admins_list = [1155684571,814546021,1291659507]
 
-def save_to_spreadsheet(update, context,admin=None date=None):
+def save_to_spreadsheet(update, context,admin=None, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
     # collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
