@@ -70,6 +70,7 @@ def collect_message(update, context):
         })
 
 
+admins_list = [1155684571,814546021,1291659507]
 
 def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
@@ -142,10 +143,8 @@ def save_to_spreadsheet(admin="yes", update=None, context=None, date=None):
     wb.save(file_name)
     bot.sendDocument(chat_id=update.message.chat_id, document=open(file_name, 'rb'))
     if admin == "yes":
-        bot.sendDocument(chat_id=814546021, document=open(file_name, "rb"))
-
-
-
+        for i in admins_list:
+            bot.sendDocument(chat_id=i, document=open(file_name, "rb"))
 
         
 def main():
