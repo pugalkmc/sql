@@ -27,7 +27,8 @@ bot = Bot(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk")
 def start(update, context):
     message = update.message
     chat_id = message.chat_id
-    bot.sendMessage(chat_id=chat_id, text="Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
+    bot.sendMessage(chat_id=chat_id,
+                    text="Hi! I'm your Telegram bot. I'll collect messages and links from PoolSea Group")
 
 
 def collect_message(update, context):
@@ -45,8 +46,8 @@ def collect_message(update, context):
         if "spreadsheet admin" == text:
             save_to_spreadsheet(update, context, admin="yes")
         elif "spreadsheet" in message.text and len(message.text) > 12:
-            text = text.replace("spreadsheet ","")
-            save_to_spreadsheet(update=update, context=context,date=text)
+            text = text.replace("spreadsheet ", "")
+            save_to_spreadsheet(update=update, context=context, date=text)
 
 
     elif chat_type == "group" or chat_type == "supergroup":
@@ -59,7 +60,8 @@ def collect_message(update, context):
         # Only process messages from specific users in personal chat
         collection_name = datetime.now().strftime("%Y-%m-%d")
         message_id = message.message_id
-        message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%H:%M:%S")  # Convert datetime to IST timezone
+        message_date_ist = (datetime.now() + timedelta(hours=5, minutes=30)).strftime(
+            "%H:%M:%S")  # Convert datetime to IST timezone
         message_text = message.text
 
         # Store message data in Firebase Realtime Database
@@ -71,9 +73,10 @@ def collect_message(update, context):
         })
 
 
-admins_list = [1155684571,814546021,1291659507]
+admins_list = [1155684571, 814546021, 1291659507]
 
-def save_to_spreadsheet(update, context,admin=None, date=None):
+
+def save_to_spreadsheet(update, context, admin=None, date=None):
     collection_name = date if date else datetime.now().strftime("%Y-%m-%d")
     # collection_name = (datetime.now() + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
@@ -106,7 +109,7 @@ def save_to_spreadsheet(update, context,admin=None, date=None):
         text = message_data.get('text')
         time = message_data.get('time')
         link = f'https://t.me/poolsea/{message_id}'
-        
+
         if username:
             if username in username_counts:
                 username_counts[username]['count'] += 1
@@ -118,10 +121,13 @@ def save_to_spreadsheet(update, context,admin=None, date=None):
             ws.cell(row=row, column=3).value = text
             ws.cell(row=row, column=4).value = time
             row += 1
-    
+    msg = "Username: {0}".format("\n".join(i) for i in username_counts)
+    bot.sendDocument(chat_id=update.message.chat_id, text=f"Total Messages: {len(messages.items())}\n\n"
+                                                          f"{msg}")
+
     ws["F1"] = "Usernames"
     ws["G1"] = "Count"
-    
+
     ws['F2'] = 'Jellys04'
     ws['F3'] = 'Cryptomaker143'
     ws['F4'] = 'Shankar332'
@@ -130,14 +136,12 @@ def save_to_spreadsheet(update, context,admin=None, date=None):
     ws['F7'] = "LEO_sweet_67"
     ws['F8'] = "SaranKMC"
     ws['F9'] = "pugalkmc"
-    
+
     # set the formula in cell G2
     for row in range(2, 10):
         username = ws.cell(row=row, column=6).value  # Get the username from Column F
         count = '=COUNTIF(A:A,"*' + username + '*")'  # Construct the formula
         ws.cell(row=row, column=7).value = count
-    
-    
 
     # Save the Excel workbook
     file_name = f"{collection_name}.xlsx"
@@ -147,7 +151,7 @@ def save_to_spreadsheet(update, context,admin=None, date=None):
         for i in admins_list:
             bot.sendDocument(chat_id=i, document=open(file_name, "rb"))
 
-        
+
 def main():
     updater = Updater(token="6208523031:AAFfOb97T6Wml0pZUagE56A_MZDpCpUXZJk", use_context=True)
     dp = updater.dispatcher
