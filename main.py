@@ -123,7 +123,7 @@ def save_to_spreadsheet(update, context, admin=None, date=None):
             row += 1
     msg = ""
     for i in username_counts:
-        msg = f"Username: {i}"
+        msg = f"Username: {i} - {i['count']}"
     bot.sendMessage(chat_id=update.message.chat_id, text=f"Total Messages: {len(messages.items())}\n\n"
                                                           f"{msg}")
 
